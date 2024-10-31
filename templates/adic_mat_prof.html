@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar/Editar Alunos e Professores</title>
+    <link rel="stylesheet" href="/static/style3.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <form action="/adicionar_professor" method="post">
+                <button class="btn">Cadastro Professor</button>
+            </form>
+            <form action="/adicionar_aluno" method="post">
+                <button class="btn">Cadastro Aluno</button>
+            </form>
+        </div>
+
+        <div class="tab_pesquisa">
+            <h1>Deletar/Editar Alunos e Professores</h1>
+
+            <!-- Campo de busca com autocomplete -->
+            <form method="POST" action="/pesquisar_editar">
+                <input type="text" id="barraPesquisa" name="barraPesquisa" placeholder="Pesquisar por nome, CPF ou matrícula..." onkeyup="pesquisar()">
+                <button type="submit">Pesquisar</button>
+                <ul id="listaItens" style="display: none;">
+                    {% for pessoa in professores %}
+                    <li onclick="copiarValor('{{ pessoa[0] }}')">{{ pessoa[0] }} - Professor - {{ pessoa[1] }}</li> <!-- Matrícula, Nome -->
+                    {% endfor %}
+                    {% for aluno in alunos %}
+                    <li onclick="copiarValor('{{ aluno[0] }}')">{{ aluno[0] }} - Aluno - {{ aluno[1] }}</li> <!-- Matrícula, Nome -->
+                    {% endfor %}
+                </ul>
+            </form>
+
+            <!-- Selecione uma pessoa (professor ou aluno) para editar ou deletar -->
+            <h3>Informações do Professor/Aluno:</h3>
+            {% if res_pessoa %}
+            <form method="POST" action="/alterar_pessoa">
+                {% for p in res_pessoa %}
+                <h1>Matrícula: <input type="text" name="matricula" value="{{ p[0] }}" readonly></h1>
+                <h1>Nome: <input type="text" name="nome" value="{{ p[1] }}"></h1>
+                <h1>CPF: <input type="text" name="cpf" value="{{ p[2] }}"></h1>
+                <h1>Turma: <input type="text" name="turma" value="{{ p[3] }}"></h1>
+                <h1>Email: <input type="email" name="email" value="{{ p[4] }}"></h1>
+                <!-- Outros campos, como idade, telefone, etc., podem ser adicionados conforme necessário -->
+                {% endfor %}
+                <button type="submit">Salvar Alterações</button>
+            </form>
+            <form method="POST" action="/deletar_pessoa">
+                <input type="hidden" name="matricula" value="{{ p[0] }}">
+                <button type="submit">Deletar</button>
+            </form>
+            {% else %}
+            <h1>Nenhum aluno ou professor encontrado.</h1>
+            {% endif %}
+
+            <!-- Tabela de Professores -->
+            <h2>Professores</h2>
+            <table class="table">
+                <tr>
+                    <th>MATRÍCULA</th>
+                    <th>NOME</th>
+                    <th>CPF</th>
+                    <th>TURMA</th>
+                    <th>EMAIL</th>
+                </tr>
+                {% for professor in professores %}
+                <tr>
+                    <td>{{ professor[0] }}</td> <!-- Matrícula -->
+                    <td>{{ professor[1] }}</td> <!-- Nome -->
+                    <td>{{ professor[2] }}</td> <!-- CPF -->
+                    <td>{{ professor[3] }}</td> <!-- Turma -->
+                    <td>{{ professor[4] }}</td> <!-- Email -->
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <!-- Script de pesquisa com preenchimento automático -->
+    <script>
+        const searchBox = document.getElementById('barraPesquisa');
+        const listaItens = document.getElementById('listaItens');
+
+        function pesquisar() {
+            const searchText = searchBox.value.toLowerCase();
+
+            if (searchText.length > 0) {
+                listaItens.style.display = 'block';  // Mostrar lista
+            } else {
+                listaItens.style.display = 'none';  // Esconder lista se não houver texto
+            }
+
+            const listItems = document.querySelectorAll('#listaItens li');
+            listItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.style.display = 'block';  // Mostrar itens que coincidem
+                } else {
+                    item.style.display = 'none';  // Esconder itens que não coincidem
+                }
+            });
+        }
+
+        function copiarValor(valor) {
+            searchBox.value = valor;
+            listaItens.style.display = 'none';  // Esconder a lista após o clique
+        }
+    </script>
+</body>
+</html>

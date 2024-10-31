@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Professor</title>
+    <link rel="stylesheet" href="/static/style3.css"> <!-- Link para o arquivo CSS externo -->
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Cabeçalho (pode adicionar conteúdo ou logo aqui) -->
+        </div>
+
+        <div class="container">
+            <div class="header">
+
+                <form action="/atri_professor" method="post">
+                    <button class="btn">atribuir materia</button>
+                </form>
+            </div>
+        <div class="tab_pesquisa">
+            <h1>Cadastro do Professor</h1>
+            <form action="/cadastro_prof" method="POST">
+                <div class="cad">
+                    <h1>Nome do professor: <input type="text" name="nome" required></h1>
+                    <h1>CPF: <input type="text" name="cpf" required></h1>
+                    <h1>Número de telefone: <input type="text" name="numero" required></h1>
+                    <h1>E-mail: <input type="email" name="email" required></h1>
+                    <h1>Idade: <input type="text" name="idade" required></h1>
+                    <h1>Senha: <input type="password" name="senha" required></h1>
+                </div>
+
+                <button type="submit" class="bot">ENVIAR</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

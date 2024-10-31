@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e Pesquisa de Alunos</title>
+    <link rel="stylesheet" href="/static/style3.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <form action="/adicionar_professor" method="post">
+                <button class="btn">Cadastro de Professor</button>
+            </form>
+            <form action="/adicionar_aluno" method="post">
+                <button class="btn">Cadastro de Aluno</button>
+            </form>
+            <form action="/deletar_editar" method="post">
+                <button class="btn">Deletar/Editar</button>
+            </form>
+        </div>
+
+        <div class="tab_pesquisa">
+            <h1>Pesquisar Matrícula</h1>
+            <form method="POST" action="/resposta_al">
+                <input type="text" id="barraPesquisa" name="barraPesquisa" placeholder="Pesquisar por matrícula, nome ou ano..." onkeyup="pesquisar()">
+                <button type="submit">Pesquisar</button>
+                <ul id="listaItens" style="display: none;">
+                    {% for aluno in alunos %}
+                    <li onclick="copiarValor('{{ aluno[0] }}')">{{ aluno[0] }} - {{ aluno[7] }} - {{ aluno[1] }}</li>
+                    {% endfor %}
+                </ul>
+            </form>
+
+            <h3>Informações do Aluno/Professor:</h3>
+            {% if res_aluno %}
+            <form method="POST" action="/alterar">
+                {% for p in res_turma %}
+                <h1>Matrícula: <input type="text" name="matricula" value="{{ p['matricula'] }}" readonly></h1>
+                <h1>Ano/Série: <input type="text" name="ano_serie" value="{{ p['ano_serie'] }}"></h1>
+                <h1>Nome: <input type="text" name="nome" value="{{ p['nome'] }}"></h1>
+                <h1>CPF: <input type="text" name="cpf" value="{{ p['cpf'] }}"></h1>
+                <h1>Turma: <input type="text" name="turma" value="{{ p['turma'] }}"></h1>
+                <h1>Email: <input type="text" name="email" value="{{ p['email'] }}"></h1>
+                {% endfor %}
+                <button type="submit">Editar</button>
+            </form>
+            {% else %}
+            <h1>Nenhum aluno encontrado.</h1>
+            {% endif %}
+
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>MATRÍCULA</th>
+                    <th>ANO</th>
+                    <th>NOME</th>
+                    <th>CPF</th>
+                    <th>RESPONSÁVEL</th>
+                    <th>EMAIL</th>
+                </tr>
+                {% for aluno in alunos %}
+                <tr>
+                    <td>{{ aluno[0] }}</td>
+                    <td>{{ aluno[0] }}</td>
+                    <td>{{ aluno[1] }}</td>
+                    <td>{{ aluno[7] }}</td>
+                    <td>{{ aluno[2] }}</td>
+                    <td>{{ aluno[8] }}</td>
+                    <td>{{ aluno[4] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const searchBox = document.getElementById('barraPesquisa');
+        const listaItens = document.getElementById('listaItens');
+
+        function pesquisar() {
+            const searchText = searchBox.value.toLowerCase();
+
+            if (searchText.length > 0) {
+                listaItens.style.display = 'block';
+            } else {
+                listaItens.style.display = 'none';
+            }
+
+            const listItems = document.querySelectorAll('#listaItens li');
+            listItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function copiarValor(valor) {
+            searchBox.value = valor;
+            listaItens.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

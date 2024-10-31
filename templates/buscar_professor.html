@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar/Editar Alunos e Professores</title>
+    <link rel="stylesheet" href="/static/style3.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <form action="/adicionar_professor" method="post">
+                <button class="btn">Cadastro Professor</button>
+            </form>
+            <form action="/adicionar_aluno" method="post">
+                <button class="btn">Cadastro Aluno</button>
+            </form>
+        </div>
+
+        <div class="tab_pesquisa">
+            <h1>atribuir materia a Professores</h1>
+
+            <!-- Campo de busca com autocomplete -->
+            <div class="tab_pesquisa">
+
+
+            <!-- Tabela de Professores -->
+            <h2>Professores</h2>
+            <h1>Pesquisar Matrícula do Professor</h1>
+            <form method="POST" action="/materia_prof">
+                <input type="text" id="barraPesquisa" name="barraPesquisa" placeholder="Pesquisar por matrícula, nome ou ano..." onkeyup="pesquisar()">
+                <button type="submit">Pesquisar</button>
+                <ul id="listaItens" style="display: none;">
+                    {% for prof in professores %}
+                    <li onclick="copiarValor('{{ prof[0] }}')">{{ prof[0] }} - {{ prof[7] }} - {{ prof[1] }}</li>
+                    {% endfor %}
+                </ul>
+            </form>
+            <h3>Informações do Professor</h3>
+<!-- Botões de Editar e Deletar na seção de Professores -->
+<form method="POST" action="/atribuir_materia">
+    {% for po in res_professor %}
+    <h1>Matrícula: <input type="text" id="matricula" name="matricula" placeholder="Pesquisar por matrícula, nome ou ano..." onkeyup="pesquisar()"></h1>
+    <h1>ano: <input type="text" name="nome" value="{{ po[1] }}"></h1>
+    <h1>horario: <input type="text" name="cpf" value="{{ po[2] }}"></h1>
+    <h1>materia: <input type="text" name="numero" value="{{ po[3] }}"></h1>
+    <button type="submit">atribuir</button>
+    </form>
+    {% endfor %}         
+
+   
+</body>
+ <!-- Script de pesquisa com preenchimento automático -->
+ <script>
+    const searchBox = document.getElementById('barraPesquisa');
+    const listaItens = document.getElementById('listaItens');
+
+    function pesquisar() {
+        const searchText = searchBox.value.toLowerCase();
+
+        if (searchText.length > 0) {
+            listaItens.style.display = 'block';  // Mostrar lista
+        } else {
+            listaItens.style.display = 'none';  // Esconder lista se não houver texto
+        }
+
+        const listItems = document.querySelectorAll('#listaItens li');
+        listItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(searchText)) {
+                item.style.display = 'block';  // Mostrar itens que coincidem
+            } else {
+                item.style.display = 'none';  // Esconder itens que não coincidem
+            }
+        });
+    }
+
+    function copiarValor(valor) {
+        searchBox.value = valor;
+        listaItens.style.display = 'none';  // Esconder a lista após o clique
+    }
+</script>
+<script>
+    const searchBox = document.getElementById('matricula');
+    const listaItens = document.getElementById('listaItens');
+
+    function pesquisar() {
+        const searchText = searchBox.value.toLowerCase();
+
+        if (searchText.length > 0) {
+            listaItens.style.display = 'block';  // Mostrar lista
+        } else {
+            listaItens.style.display = 'none';  // Esconder lista se não houver texto
+        }
+
+        const listItems = document.querySelectorAll('#listaItens li');
+        listItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(searchText)) {
+                item.style.display = 'block';  // Mostrar itens que coincidem
+            } else {
+                item.style.display = 'none';  // Esconder itens que não coincidem
+            }
+        });
+    }
+
+    function copiarValor(valor) {
+        searchBox.value = valor;
+        listaItens.style.display = 'none';  // Esconder a lista após o clique
+    }
+</script>
+</html>
