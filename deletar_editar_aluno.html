@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar/Editar Alunos e Professores</title>
+    <link rel="stylesheet" href="/static/style3.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <form action="/adicionar_professor" method="post">
+                <button class="btn">Cadastro Professor</button>
+            </form>
+            <form action="/adicionar_aluno" method="post">
+                <button class="btn">Cadastro Aluno</button>
+            </form>
+        </div>
+
+        <div class="tab_pesquisa">
+            <h1>Deletar/Editar Alunos e Professores</h1>
+
+            <!-- Campo de busca com autocomplete -->
+            <div class="tab_pesquisa">
+
+                <!-- Tabela de Alunos -->
+                <h2>Alunos</h2>
+                <h1>Pesquisar Matrícula do Aluno</h1>
+                <form method="POST" action="/resposta_aluno">
+                    <input type="text" id="barraPesqui" name="barraPesqui"
+                        placeholder="Pesquisar por matrícula, nome ou ano..." onkeyup="pesquisar()">
+                    <button type="submit">Pesquisar</button>
+                    <ul id="listaItens" style="display: none;">
+                        {% for aluno in alunos %}
+                        <li onclick="copiarValor('{{ aluno[0] }}')">{{ aluno[0] }} - {{ aluno[7] }} - {{ aluno[1] }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </form>
+                <h3>Informações do Aluno</h3>
+                <!-- Botões de Editar e Deletar na seção de Alunos -->
+                {% if res_aluno %}
+                <form method="POST" action="/alterar_aluno">
+                    {% for p in res_alunos %}
+                    <h1>Matrícula: <input type="text" name="matricula" value="{{ p['matricula'] }}" readonly></h1>
+                    <h1>Ano/Série: <input type="text" name="ano_serie" value="{{ p['ano_serie'] }}"></h1>
+                    <h1>Nome: <input type="text" name="nome" value="{{ p['nome'] }}"></h1>
+                    <h1>CPF: <input type="text" name="cpf" value="{{ p['cpf'] }}"></h1>
+                    <h1>Turma: <input type="text" name="turma" value="{{ p['turma'] }}"></h1>
+                    <h1>Email: <input type="text" name="email" value="{{ p['email'] }}"></h1>
+                    {% endfor %}
+                    <button type="submit">Editar</button>
+                </form>
+
+                <!-- Formulário para deletar o aluno -->
+                <form method="POST" action="/deletar_aluno">
+                    <input type="hidden" name="matricula" value="{{ p['matricula'] }}">
+                    <button type="submit">Deletar</button>
+                </form>
+                {% endif %}
+
+                <table class="table">
+                    <tr>
+                        <th>MATRÍCULA</th>
+                        <th>NOME</th>
+                        <th>CPF</th>
+                        <th>ANO</th>
+                        <th>EMAIL</th>
+                    </tr>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>{{ aluno[0] }}</td> <!-- Matrícula -->
+                        <td>{{ aluno[1] }}</td> <!-- Nome -->
+                        <td>{{ aluno[2] }}</td> <!-- CPF -->
+                        <td>{{ aluno[3] }}</td> <!-- Ano/Série -->
+                        <td>{{ aluno[4] }}</td> <!-- Email -->
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <script>
+            const searchBox = document.getElementById('barraPesqui');
+            const listaItens = document.getElementById('listaItens');
+
+            function pesquisar() {
+                const searchText = searchBox.value.toLowerCase();
+
+                if (searchText.length > 0) {
+                    listaItens.style.display = 'block';
+                } else {
+                    listaItens.style.display = 'none';
+                }
+
+                const listItems = document.querySelectorAll('#listaItens li');
+                listItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchText)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            function copiarValor(valor) {
+                searchBox.value = valor;
+                listaItens.style.display = 'none';
+            }
+        </script>
+</body>
+
+</html>
